@@ -1,0 +1,44 @@
+<html>
+	<head>
+		<title> Info </title>
+			<script src="https://simplycoding.org/files/simplyjs/simply.js"></script>
+			<script>
+			function start(){
+				sjs.open("target" ,1000,600);
+				var guy = 1;
+				var wait = false;
+				var next = new sjs.Button("next", function(){
+					if (guy <= 3) {
+						guy += 1;
+						theGuy();
+
+					}
+				});
+				next.moveTo(900,40);
+				var back = new sjs.Button("back", function(){
+					if (guy >= 0) {
+						guy -= 1;
+						theGuy();
+
+					}
+				});
+				back.moveTo(50,40);
+				function theGuy(){
+					if (guy = 1) {
+						var enemy = new sjs.Image("Tower Defense/Images/bad.gif")
+							enemy.setSize(200,200);
+							enemy.moveTo(100,100);
+					}
+					if (guy = 2) {
+						var enemy2 = new sjs.Image("Tower Defense/Images/Skeleton.gif")
+							enemy2.setSize(200,200);
+							enemy2.moveTo(100,100);
+					}
+				}
+			}
+			</script>
+	</head>
+	<body onload="start()">
+		<div id="target" style="overflow:hidden; background-color:gray; margin:auto;"></div>
+	</body>
+</html>

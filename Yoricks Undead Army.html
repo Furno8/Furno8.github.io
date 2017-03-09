@@ -1,0 +1,61 @@
+
+<html>
+	<head>
+		<title> Main Menu </title>
+			<script src="https://simplycoding.org/files/simplyjs/simply.js"></script>
+			<script>
+			function start(){
+				sjs.open("target" ,800,500);
+
+				var menu_text = new sjs.Text("Yorick's Undead Army",30,"black");
+					menu_text.moveTo(250,0);
+
+				var info_text = new sjs.Text("By Seth Harmon",20,"black");
+				info_text.moveTo(320,30);
+
+				var gameInfo = new sjs.Button("Info", function(){
+					window.location = "Info.html";
+				});
+				gameInfo.moveTo(370,450);
+
+				var lvl1Btn = new sjs.Button("Level 1", function(){
+					window.location = "Level 1.html";
+				});
+				lvl1Btn.moveTo(50,60);
+
+				var lvl2Btn = new sjs.Button("Level 2", function(){
+					window.location = "Level 2.html";
+				});
+				lvl2Btn.moveTo(125,60);
+
+				var lvl3Btn = new sjs.Button("Level 3", function(){
+					window.location = "Level 3.html";
+				});
+				lvl3Btn.moveTo(200,60);
+
+				var lvl4Btn = new sjs.Button("Level 4", function(){
+					window.location = "Level 4.html";
+				});
+				lvl4Btn.moveTo(275,60);
+
+				var lvl5Btn = new sjs.Button("Level 5", function(){
+					window.location = "Level 5.html";
+				});
+				lvl5Btn.moveTo(350,60);
+
+				var lvl6Btn = new sjs.Button("Level 6", function(){
+					window.location = "Level 6.html";
+				});
+				lvl6Btn.moveTo(425,60);
+
+				var lvl7Btn = new sjs.Button("Level 7", function(){
+					window.location = "Level 7.html";
+				});
+				lvl7Btn.moveTo(500,60);
+			}
+			</script>
+	</head>
+	<body onload="start()">
+		<div id="target" style="overflow:hidden; background-color:gray; margin:auto;"></div>
+	</body>
+</html>

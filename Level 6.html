@@ -1,0 +1,1790 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title> Level 6 </title>
+		<script src="https://simplycoding.org/files/simplyjs/simply.js"></script> 
+		<script> 
+			function start(){
+			//Backround
+				sjs.open("target" ,1200,700);
+				var background = new sjs.Image("Tower Defense/Images/Forest Night.png");
+					background.setSize(2400,sjs.getHeight());
+				var view = new sjs.Image(" ");
+					view.setSize(1200,700);
+					view.moveTo(2400,700);
+					view.node.style.zIndex = -2;
+
+					sjs.scrollable(view,background);
+					sjs.keyDown(LEFT_KEY, function(){
+						view.pushLeft();
+					});
+					sjs.keyDown(RIGHT_KEY, function(){
+						view.pushRight();
+					});
+					sjs.keyDown(A_KEY, function(){
+						view.pushLeft();
+					});
+					sjs.keyDown(D_KEY, function(){
+						view.pushRight();
+					});
+
+			//Timer
+				mana_text = new sjs.Text("Mana: "+mana,18,"blue");
+				mana_text.moveTo(0,20);
+				mana_text.fixed = true;	
+				credits_text = new sjs.Text("Credits: "+credits,18,"green");
+				credits_text.fixed = true;
+				var creditIncome = setInterval(function(){
+					credits += goldregen;
+					credits_text.setText("Credits: "+credits);
+				},500);
+
+				var speedTimer = 0;
+				var fasterEnemy = setInterval(function(){
+					speedTimer.type = "speedTimer";
+					speedTimer += 10;	
+					if(speedTimer >= 600){
+						clearInterval(fasterEnemy);
+					}
+				},950);
+
+			//Enemies
+				var enemyInterval = setInterval(function(){
+					var enemy = new sjs.Image("Tower Defense/Images/bad.gif");
+						enemy.type = "enemy";
+						enemy.moveTo(0,575);
+						enemy.noBounds = true;
+						enemy.setSize(50,50);
+						enemy.friction = 0;	
+						enemy.lives = 1;
+						enemy.pushRight(3 + speedTimer/100);
+						if (enemycastle.lives <= 0){
+							clearInterval(enemyInterval);
+							clearInterval(enemy2Interval);
+							clearInterval(enemy3Interval);
+							clearInterval(enemy4Interval);
+						}
+				},950);
+
+				var enemy2Interval = setInterval(function(){
+					var enemy2 = new sjs.Image("Tower Defense/Images/skeleton.gif");
+						enemy2.type = "enemy2";
+						enemy2.moveTo(0,545);
+						enemy2.noBounds = true;
+						enemy2.setSize(80,80);
+						enemy2.friction = 0;	
+						enemy2.pushRight(3);
+						enemy2.lives = Math.round(5 + speedTimer/100);
+						enemy2.attack = true;
+						enemy2.attackrate = 300; 
+				},5000);
+
+				var enemy3Interval = setInterval(function(){
+					var enemy3 = new sjs.Image("Tower Defense/Images/Crap.gif");
+						enemy3.type = "enemy3";
+						enemy3.moveTo(0,545);
+						enemy3.noBounds = true;
+						enemy3.setSize(80,80);
+						enemy3.friction = 0;
+						enemy3.pushRight(2);
+						enemy3.lives = 3; 
+					var enemyrange = new sjs.Image("")
+						enemyrange.type = "enemyrange";
+						enemyrange.setSize(300,80);
+						enemyrange.noBounds = true;
+						enemyrange.pushRight(2);
+						enemyrange.friction = 0;
+						enemyrange.moveTo(enemy3.getX()+80,enemy3.getY());
+						enemyrange.fire=true;
+						enemyrange.firerate = 1500;
+						enemyrange.node.style.zIndex = -2;
+						enemy3.enemyrange = enemyrange; 
+						enemyrange.enemy3 = enemy3; 
+				},6000);
+
+				var enemy4Interval = setInterval(function(){
+					var enemy4 = new sjs.Image("Tower Defense/Images/Hogg Rider.gif");
+						enemy4.jumpAttack = true;
+						enemy4.type = "enemy4";
+						enemy4.moveTo(0,525);
+						enemy4.noBounds = true;
+						enemy4.setSize(160,100);
+						enemy4.friction = 0;	
+						enemy4.pushRight(5);
+						enemy4.lives = 5;
+						enemy4.attack = true;
+						enemy4.attackrate = 300;
+				},10000);
+				//Allies
+				//Bosses
+				var nightmusic = new Audio('Tower Defense/Night.mp3');
+				/*var bosses = setInterval(function(){
+					if (enemycastle.lives <= 15){
+						var tooBig = 0;
+						var shockwave = new sjs.Image("Tower Defense/Images/shockwave.png")
+							shockwave.moveTo(enemycastle.getX(),enemycastle.getY());
+							shockwave.setSize(32,32);
+							shockwave.noBounds = true;
+							var shock = setInterval(function(){
+								shockwave.grow(100,100);
+								tooBig += 1;
+								if (tooBig >= 50) {
+									shockwave.destroy();
+									clearInterval(shock);
+								};
+							},50);
+						var bossmusic = new Audio('Tower Defense/Boss.mp3');
+							bossmusic.play();
+							yorickJam.pause();
+						var boss = new sjs.Image("Tower Defense/Images/Chucky.gif")
+							boss.type = "boss";
+							boss.moveTo(0,505);
+							boss.noBounds = true;
+							boss.setSize(200,170);
+							boss.friction = 0;
+							boss.pushRight(2);
+							boss.lives = 35; 
+							clearInterval(bosses);
+							var enemyGen = setInterval(function(){
+								var enemy = new sjs.Image("Tower Defense/Images/bad.gif");
+									enemy.type = "enemy";
+									enemy.moveTo(boss.getX()+90,boss.getY()+70);
+									enemy.noBounds = true;
+									enemy.setSize(50,50);
+									enemy.friction = 0;	
+									enemy.lives = 1;
+									enemy.pushRight(3 + speedTimer/100);
+								if (boss.lives <= 26){
+									var enemy2 = new sjs.Image("Tower Defense/Images/skeleton.gif");
+										enemy2.type = "enemy2";
+										enemy2.moveTo(boss.getX()+90,boss.getY()+40);
+										enemy2.noBounds = true;
+										enemy2.setSize(80,80);
+										enemy2.friction = 0;	
+										enemy2.pushRight(3);
+										enemy2.lives = Math.round(5 + speedTimer/100);
+										enemy2.attack = true;
+										enemy2.attackrate = 300; 
+									if (boss.lives <= 16){
+										var enemy3 = new sjs.Image("Tower Defense/Images/Crap.gif");
+											enemy3.type = "enemy3";
+											enemy3.moveTo(boss.getX()+90,boss.getY()+40);
+											enemy3.noBounds = true;
+											enemy3.setSize(80,80);
+											enemy3.friction = 0;
+											enemy3.pushRight(2);
+											enemy3.lives = 3; 
+										var enemyrange = new sjs.Image("")
+											enemyrange.type = "enemyrange";
+											enemyrange.setSize(300,80);
+											enemyrange.noBounds = true;
+											enemyrange.pushRight(2);
+											enemyrange.friction = 0;
+											enemyrange.moveTo(enemy3.getX()+80,enemy3.getY());
+											enemyrange.follow(enemy3);
+											enemyrange.fire=true;
+											enemyrange.firerate = 1000;
+											enemyrange.node.style.zIndex = -2;
+											enemy3.enemyrange = enemyrange; 
+											enemyrange.enemy3 = enemy3; 
+									}
+								}
+								clearInterval(bosses);
+								if (boss.lives <= 0) {
+									clearInterval(enemyGen);
+								}
+							},1500);
+					}
+				},100);*/
+				//Waves
+				//Tracker
+				var tracker = new sjs.Image("");
+				tracker.type = "tracker"; 
+				tracker.setSize(1,sjs.getHeight());
+				tracker.moveTo(50,0); 
+				tracker.node.style.zIndex = -1;
+
+				//Music
+				sjs.onHit("enemy","tracker",function(x,y){
+					nightmusic.play();
+					y.destroy();
+					var replay = setInterval(function(){
+						nightmusic.play();
+					},5000);
+				});
+				
+				//land
+				var land = new sjs.Image("");
+				land.type="land";
+				land.setSize(background.getWidth(),55);
+				land.moveTo(0,625);
+				land.node.style.zIndex = -1;
+
+				//Castle
+				var castle = new sjs.Image("Tower Defense/Images/Castle.png")
+				castle.type="castle";
+				castle.setSize(100,250);
+				castle.moveTo(2200,375);
+				castle.lives = 30;
+
+				var enemycastle = new sjs.Image("Tower Defense/Images/gameHole.png")
+				enemycastle.type="enemycastle";
+				enemycastle.setSize(130,130);
+				enemycastle.moveTo(0,490);
+				enemycastle.lives = 35;
+
+				var castleGuard = new sjs.Image("")
+				castleGuard.type = "castleGuard";
+				castleGuard.setSize(1,sjs.getHeight());
+				castleGuard.moveTo(2350,0);
+				castleGuard.node.style.zIndex = -1;
+				castle.castleGuard = castleGuard;
+
+				var enemyCastleGuard = new sjs.Image("")
+				enemyCastleGuard.type = "enemyCastleGuard";
+				enemyCastleGuard.setSize(1,sjs.getHeight());
+				enemyCastleGuard.moveTo(-100,0);
+				enemyCastleGuard.node.style.zIndex = -1;
+				enemycastle.enemyCastleGuard = enemyCastleGuard;
+
+				//Buttons
+				var onCooldown = false;
+				var box1 = new sjs.Image("Tower Defense/Images/BlockerBox.png")
+					box1.fixed = true;
+					box1.setSize(50,50);
+					box1.moveTo(162,25);
+				var btn1 = new sjs.Image("Tower Defense/Images/30 Credits.png")
+					btn1.fixed = true;
+					btn1.setSize(75,75);
+					btn1.moveTo(150,50);
+					btn1.onMouseDown(function(){
+						if (credits >= 30){	
+							if (onCooldown == false) {
+								blocker();
+								var cooldown = new sjs.Image("Tower Defense/Images/Cooldown.png")
+								cooldown.fixed = true;
+								cooldown.setSize(75,75);
+								cooldown.moveTo(150,50);
+								cooldown.node.style.zIndex = 2;
+								onCooldown = true;
+								setTimeout(function(){
+									cooldown.destroy();
+									onCooldown = false;
+								},500);
+							}
+						}
+					});
+					sjs.keyDown(Q_KEY, function(){
+						if (credits >= 30){	
+							if (onCooldown == false) {
+								blocker();
+								var cooldown = new sjs.Image("Tower Defense/Images/Cooldown.png")
+								cooldown.fixed = true;
+								cooldown.setSize(75,75);
+								cooldown.moveTo(150,50);
+								cooldown.node.style.zIndex = 2;
+								onCooldown = true;
+								setTimeout(function(){
+									cooldown.destroy();
+									onCooldown = false;
+								},500);
+							}
+						}
+					});
+				var onCooldown2 = false;
+				var box2 = new sjs.Image("Tower Defense/Images/GunnerBox.png")
+					box2.fixed = true;
+					box2.setSize(50,50);
+					box2.moveTo(247,25);
+				var btn2 = new sjs.Image("Tower Defense/Images/50 Credits.png")
+					btn2.fixed = true;
+					btn2.setSize(75,75);
+					btn2.moveTo(235,50);
+					btn2.onMouseDown(function(){
+						if (credits >= 50){	
+							if (onCooldown2 == false) {
+								gunner();
+								var cooldown = new sjs.Image("Tower Defense/Images/Cooldown.png")
+								cooldown.fixed = true;
+								cooldown.setSize(75,75);
+								cooldown.moveTo(235,50);
+								cooldown.node.style.zIndex = 2;
+								onCooldown2 = true;
+								setTimeout(function(){
+									cooldown.destroy();
+									onCooldown2 = false;
+								},1000);
+							}
+						}
+					});
+					sjs.keyDown(W_KEY, function(){
+						if (credits >= 50){	
+							if (onCooldown2 == false) {
+								gunner();
+								var cooldown = new sjs.Image("Tower Defense/Images/Cooldown.png")
+								cooldown.fixed = true;
+								cooldown.setSize(75,75);
+								cooldown.moveTo(235,50);
+								cooldown.node.style.zIndex = 2;
+								onCooldown2 = true;
+								setTimeout(function(){
+									cooldown.destroy();
+									onCooldown2 = false;
+								},1000);
+							}
+						}
+					});
+				var onCooldown3 = false;
+				var box3 = new sjs.Image("Tower Defense/Images/CannonBox.png")
+					box3.fixed = true;
+					box3.setSize(50,50);
+					box3.moveTo(332,25);
+				var btn3 = new sjs.Image("Tower Defense/Images/80 Credits.png")
+					btn3.fixed = true;
+					btn3.setSize(75,75);
+					btn3.moveTo(320,50);
+					btn3.onMouseDown(function(){
+						if (credits >= 80){	
+							if (onCooldown3 == false) {
+								cannon();
+								var cooldown = new sjs.Image("Tower Defense/Images/Cooldown.png")
+								cooldown.fixed = true;
+								cooldown.setSize(75,75);
+								cooldown.moveTo(320,50);
+								cooldown.node.style.zIndex = 2;
+								onCooldown3 = true;
+								setTimeout(function(){
+									cooldown.destroy();
+									onCooldown3 = false;
+								},1500);
+							}
+						}
+					});
+					sjs.keyDown(E_KEY, function(){
+						if (credits >= 80){	
+							if (onCooldown3 == false) {
+								cannon();
+								var cooldown = new sjs.Image("Tower Defense/Images/Cooldown.png")
+								cooldown.fixed = true;
+								cooldown.setSize(75,75);
+								cooldown.moveTo(320,50);
+								cooldown.node.style.zIndex = 2;
+								onCooldown3 = true;
+								setTimeout(function(){
+									cooldown.destroy();
+									onCooldown3 = false;
+								},1500);
+							}
+						}
+					});
+				var onCooldown4 = false;
+				var box4 = new sjs.Image("Tower Defense/Images/RifleBox.png")
+					box4.fixed = true;
+					box4.setSize(50,50);
+					box4.moveTo(417,25);
+				var btn4 = new sjs.Image("Tower Defense/Images/100 Credits.png")
+					btn4.fixed = true;
+					btn4.setSize(75,75);
+					btn4.moveTo(405,50);
+					btn4.onMouseDown(function(){
+						if (credits >= 100){	
+							if (onCooldown4 == false) {
+								rifleman();
+								var cooldown = new sjs.Image("Tower Defense/Images/Cooldown.png")
+								cooldown.fixed = true;
+								cooldown.setSize(75,75);
+								cooldown.moveTo(405,50);
+								cooldown.node.style.zIndex = 2;
+								onCooldown4 = true;
+								setTimeout(function(){
+									cooldown.destroy();
+									onCooldown4 = false;
+								},1250);
+							}
+						}
+					});
+					sjs.keyDown(R_KEY, function(){
+						if (credits >= 100){	
+							if (onCooldown4 == false) {
+								rifleman();
+								var cooldown = new sjs.Image("Tower Defense/Images/Cooldown.png")
+								cooldown.fixed = true;
+								cooldown.setSize(75,75);
+								cooldown.moveTo(405,50);
+								cooldown.node.style.zIndex = 2;
+								onCooldown4 = true;
+								setTimeout(function(){
+									cooldown.destroy();
+									onCooldown4 = false;
+								},1250);
+							}
+						}
+					});
+				var onCooldown5 = false;
+				var box5 = new sjs.Image("Tower Defense/Images/Blaster Man Box.png")
+					box5.fixed = true;
+					box5.setSize(50,50);
+					box5.moveTo(502,25);
+				var btn5 = new sjs.Image("Tower Defense/Images/100 Credits.png")
+					btn5.fixed = true;
+					btn5.setSize(75,75);
+					btn5.moveTo(490,50);
+					btn5.onMouseDown(function(){
+						if (credits >= 100){
+							if (onCooldown5 == false) {	
+								blasterman();
+								var cooldown = new sjs.Image("Tower Defense/Images/Cooldown.png")
+								cooldown.fixed = true;
+								cooldown.setSize(75,75);
+								cooldown.moveTo(490,50);
+								cooldown.node.style.zIndex = 2;
+								onCooldown5 = true;
+								setTimeout(function(){
+									cooldown.destroy();
+									onCooldown5 = false;
+								},1500);
+							}
+						}
+					});
+					sjs.keyDown(T_KEY, function(){
+						if (credits >= 100){
+							if (onCooldown5 == false) {	
+								blasterman();
+								var cooldown = new sjs.Image("Tower Defense/Images/Cooldown.png")
+								cooldown.fixed = true;
+								cooldown.setSize(75,75);
+								cooldown.moveTo(490,50);
+								cooldown.node.style.zIndex = 2;
+								onCooldown5 = true;
+								setTimeout(function(){
+									cooldown.destroy();
+									onCooldown5 = false;
+								},1500);
+							}
+						}
+					});
+				var costume = 1;
+				var costume2 = 0;
+				var clockCostume = 1;
+				var number = new sjs.Image("Tower Defense/Images/1.png")
+					number.fixed = true;
+					number.setSize(8,7);
+					number.moveTo(1115,85);
+					number.node.style.zIndex = 2;
+				var number2 = new sjs.Image("Tower Defense/Images/0.png")
+					number2.fixed = true;
+					number2.setSize(8,7);
+					number2.moveTo(1120,85);
+					number2.node.style.zIndex = 2;
+				var number3 = new sjs.Image("Tower Defense/Images/0.png")
+					number3.fixed = true;
+					number3.setSize(8,7);
+					number3.moveTo(1125,85);
+					number3.node.style.zIndex = 2;
+				var number4 = new sjs.Image(" ")
+					number4.fixed = true;
+					number4.setSize(8,7);
+					number4.moveTo(1110,85);
+					number4.node.style.zIndex = -2;
+				var creditbox = new sjs.Image("Tower Defense/Images/GoldBox.png")
+					creditbox.fixed = true;
+					creditbox.setSize(50,50);
+					creditbox.moveTo(1112,25);
+				var creditBtn = new sjs.Image("Tower Defense/Images/Mana Bar.png")
+					creditBtn.fixed = true;
+					creditBtn.setSize(75,75);
+					creditBtn.moveTo(1100,50);
+					creditBtn.onMouseDown(function(){
+						if (mana >= manaCost){
+							if (manaCost <= 9800){
+								goldRegen();
+								costume += 1;
+								clockCostume += 1;
+								if (clockCostume >= 10){
+									costume2 += 1;
+									number4.setImage("Tower Defense/Images/"+(costume2)+".png");
+									clockCostume = 0;
+									costume = 0;
+									number4.node.style.zIndex = 2;
+								}
+								number.setImage("Tower Defense/Images/"+(costume)+".png");
+							}
+						}
+					});
+
+				//On Hits 
+				sjs.onHit("blocker","enemy",function(x,y){
+					if(x.attack == true){ 
+						x.stop();
+						x.setImage("Tower Defense/Images/AstroBlockerattack.png");
+						y.lives--;
+						x.lives--; 
+						if(y.lives<=0){
+							y.destroy();
+							mana += 10;
+							mana_text.setText("Mana: "+mana);
+						} 
+						x.attack = false;
+						setTimeout(function(){
+							x.setImage("Tower Defense/Images/AstroBlocker.gif");
+							x.attack = true;
+							x.pushLeft(4);
+							if(x.lives<=0){
+								var dead = new sjs.Image("Tower Defense/Images/deadGuy.png");
+								dead.type = "dead";
+								dead.moveTo(x.getX(),x.getY()+5);;
+								dead.noBounds = true;
+								dead.setSize(50,50);
+								dead.friction = 0.1;	
+								dead.pushRight(5);
+								x.destroy();
+								setTimeout(function(){
+									dead.destroy();
+								},500);
+							} 
+						},x.attackrate);
+					} 
+				});
+
+				sjs.onHit("blocker","enemy3",function(x,y){
+					if(x.attack == true){ 
+						x.stop();
+						x.setImage("Tower Defense/Images/AstroBlockerattack.png");
+						y.lives--;
+						if(y.lives<=0){
+							y.destroy();
+							mana += 30;
+							mana_text.setText("Mana: "+mana);
+						} 
+						x.attack = false;
+						setTimeout(function(){
+							x.setImage("Tower Defense/Images/AstroBlocker.gif");
+							x.attack = true;
+							x.pushLeft(4);
+							if(x.lives<=0){
+								var dead = new sjs.Image("Tower Defense/Images/deadGuy.png");
+								dead.type = "dead";
+								dead.moveTo(x.getX(),x.getY()+5);;
+								dead.noBounds = true;
+								dead.setSize(50,50);
+								dead.friction = 0.1;	
+								dead.pushRight(5);
+								x.destroy();
+								setTimeout(function(){
+									dead.destroy();
+								},500);
+							} 
+						},x.attackrate);
+					} 
+				});
+
+				sjs.onHit("blocker","enemycastle",function(x,y){
+					if(x.attack == true){ 
+						x.stop();
+						x.setImage("Tower Defense/Images/AstroBlockerattack.png");
+						x.lives--;
+						y.lives--;
+						setTimeout(function(){
+							var enemy = new sjs.Image("Tower Defense/Images/bad.gif");
+								enemy.type = "enemy";
+								enemy.moveTo(0,575);
+								enemy.noBounds = true;
+								enemy.setSize(50,50);
+								enemy.friction = 0;	
+								enemy.lives = 1;
+								enemy.pushRight(3 + speedTimer/100);
+							if (y.lives <= 21){
+								var enemy2 = new sjs.Image("Tower Defense/Images/skeleton.gif");
+									enemy2.type = "enemy2";
+									enemy2.moveTo(0,545);
+									enemy2.noBounds = true;
+									enemy2.setSize(80,80);
+									enemy2.friction = 0;	
+									enemy2.pushRight(3);
+									enemy2.lives = Math.round(5 + speedTimer/100);
+									enemy2.attack = true;
+									enemy2.attackrate = 300; 
+								if (y.lives <= 11){
+									var enemy3 = new sjs.Image("Tower Defense/Images/Crap.gif");
+										enemy3.type = "enemy3";
+										enemy3.moveTo(0,545);
+										enemy3.noBounds = true;
+										enemy3.setSize(80,80);
+										enemy3.friction = 0;
+										enemy3.pushRight(2);
+										enemy3.lives = 3; 
+									var enemyrange = new sjs.Image("")
+										enemyrange.type = "enemyrange";
+										enemyrange.setSize(300,80);
+										enemyrange.noBounds = true;
+										enemyrange.pushRight(2);
+										enemyrange.friction = 0;
+										enemyrange.moveTo(enemy3.getX()+80,enemy3.getY());
+										enemyrange.follow(enemy3);
+										enemyrange.fire=true;
+										enemyrange.firerate = 1000;
+										enemyrange.node.style.zIndex = -2;
+										enemy3.enemyrange = enemyrange; 
+										enemyrange.enemy3 = enemy3; 
+								}
+							}
+						},200);
+						if(y.lives<=0){
+							y.destroy();
+							var nextLevel = new sjs.Button("Congratulations! Click to go to Menu!", function(){
+								window.location = "Yoricks Undead Army.html";
+							});
+							nextLevel.center(); 
+						}
+						x.attack = false;
+						setTimeout(function(){
+							x.setImage("Tower Defense/Images/AstroBlocker.gif");
+							x.attack = true;
+							x.pushLeft(4);
+							if(x.lives<=0){
+								var dead = new sjs.Image("Tower Defense/Images/deadGuy.png");
+								dead.type = "dead";
+								dead.moveTo(x.getX(),x.getY()+5);;
+								dead.noBounds = true;
+								dead.setSize(50,50);
+								dead.friction = 0.1;	
+								dead.pushRight(5);
+								x.destroy();
+								setTimeout(function(){
+									dead.destroy();
+								},500);
+							} 
+						},x.attackrate);
+					} 
+				});
+
+				sjs.onHit("blocker","enemy2",function(x,y){
+					if(x.attack == true){ 
+						x.stop();
+						x.setImage("Tower Defense/Images/AstroBlockerattack.png");
+						y.lives--;
+						x.lives--; 
+						if(y.lives<=0){
+							y.destroy();
+							mana += 20;
+							mana_text.setText("Mana: "+mana);
+						} 
+						x.attack = false;
+						setTimeout(function(){
+							x.setImage("Tower Defense/Images/AstroBlocker.gif");
+							x.attack = true;
+							x.pushLeft(4);
+							if(x.lives<=0){
+								var dead = new sjs.Image("Tower Defense/Images/deadGuy.png");
+								dead.type = "dead";
+								dead.moveTo(x.getX(),x.getY()+5);;
+								dead.noBounds = true;
+								dead.setSize(50,50);
+								dead.friction = 0.1;	
+								dead.pushRight(5);
+								x.destroy();
+								setTimeout(function(){
+									dead.destroy();
+								},500);
+							} 
+						},x.attackrate);
+					} 
+					if(y.attack == true){ 
+						y.stop();
+						y.setSize(98,80);
+						y.setImage("Tower Defense/Images/enemy2attack.png");
+						y.lives--; 
+						y.attack = false;
+						setTimeout(function(){
+							y.setImage("Tower Defense/Images/skeleton.gif");
+							y.setSize(80,80);
+							y.attack = true;
+							y.pushRight(3);
+							if(y.lives<=0){
+								var dead = new sjs.Image("Tower Defense/Images/skeletonDeath.gif");
+								dead.moveTo(y.getX(),y.getY());;
+								dead.noBounds = true;
+								dead.setSize(80,80);
+								y.destroy();
+								setTimeout(function(){
+									dead.destroy();
+								},500);
+							} 
+						},y.attackrate);
+					}
+				});  
+
+				sjs.onHit("enemy2",["gunner","cannon","rifleman","castle","blasterman"],function(x,y){ 
+					if(x.attack == true){ 
+						x.stop();
+						x.setSize(98,80);
+						x.setImage("Tower Defense/Images/enemy2attack.png");
+						y.lives--; 
+						x.attack = false;
+						setTimeout(function(){
+							x.setImage("Tower Defense/Images/skeleton.gif");
+							x.setSize(80,80);
+							x.attack = true;
+							x.pushRight(3);
+							if(x.lives<=0){
+								var dead = new sjs.Image("Tower Defense/Images/skeletonDeath.gif");
+								dead.moveTo(x.getX(),x.getY());;
+								dead.noBounds = true;
+								dead.setSize(80,80);
+								x.destroy();
+								setTimeout(function(){
+									dead.destroy();
+								},500);
+							}  
+						},x.attackrate);
+					}
+				}); 
+
+				sjs.onHit("enemy4","blocker",function(x,y){ 
+					if (x.jumpAttack == true){
+						x.stop();
+						x.setImage("Tower Defense/Images/Hogg Rider3.png"); 
+						x.pushRight(15);
+						x.lives--; 
+						y.lives--; 
+						if (y.lives <= 0) {
+							y.destroy();
+						}
+						x.jumpAttack = false;
+						setTimeout(function(){
+							x.setImage("Tower Defense/Images/Hogg Rider.gif");
+							x.stop();
+							x.jumpAttack = true;
+							x.pushRight(5);
+							if (x.lives <= 0) {
+								x.destroy();
+							}
+						},500);
+					}
+				}); 
+
+				sjs.onHit("enemy4",["gunner","cannon","rifleman","blasterman"],function(x,y){ 
+					if(x.attack == true){ 
+						x.stop();
+						x.setImage("Tower Defense/Images/Hogg Rider Attack.png");
+						y.lives--; 
+						if (y.lives <= 0) {
+							y.destroy();
+						}
+						x.attack = false;
+						setTimeout(function(){
+							x.setImage("Tower Defense/Images/Hogg Rider.gif");
+							x.attack = true;
+							x.pushRight(5);
+							if(x.lives<=0){
+								x.destroy();
+							}  
+						},x.attackrate);
+					}
+				}); 
+
+				sjs.onHit("enemy4","castle",function(x,y){ 
+					if(x.attack == true){ 
+						x.stop();
+						x.setImage("Tower Defense/Images/Hogg Rider Attack.png");
+						y.lives--; 
+						if (y.lives <= 0) {
+							y.destroy();
+							y.castleGuard.destroy();
+						}
+						x.attack = false;
+						setTimeout(function(){
+							x.setImage("Tower Defense/Images/Hogg Rider.gif");
+							x.attack = true;
+							x.pushRight(5);
+							if(x.lives<=0){
+								x.destroy();
+							}  
+						},x.attackrate);
+					}
+				});
+
+				sjs.onHit("enemy","gunner",function(x,y){
+					y.lives--;
+					if(y.lives<=0){
+						y.destroy();
+					}
+				}); 
+
+				sjs.onHit("enemy","cannon",function(x,y){
+					y.lives--;
+					if(y.lives<=0){
+						y.destroy();
+					}
+				});
+
+				sjs.onHit("enemy","rifleman",function(x,y){
+					y.lives--;
+					if(y.lives<=0){
+						y.destroy();
+					}
+				});
+
+				sjs.onHit("enemy","blasterman",function(x,y){
+					y.lives--;
+					if(y.lives<=0){
+						y.destroy();
+					}
+				});
+
+				sjs.onHit("enemybullet","blocker",function(x,y){
+					y.lives--; 
+					x.destroy();
+					if(y.lives<=0){
+						y.destroy();
+					}
+				}); 
+
+				sjs.onHit("enemybullet","gunner",function(x,y){
+					y.lives--; 
+					x.destroy();
+					if(y.lives<=0){
+						y.destroy();
+					}
+				}); 
+
+				sjs.onHit("enemybullet","rifleman",function(x,y){
+					y.lives--; 
+					x.destroy();
+					if(y.lives<=0){
+						y.destroy();
+					}
+				}); 
+
+				sjs.onHit("enemybullet","blasterman",function(x,y){
+					y.lives--; 
+					x.destroy();
+					if(y.lives<=0){
+						y.destroy();
+					}
+				}); 
+
+				sjs.onHit("enemybullet","cannon",function(x,y){
+					y.lives--; 
+					x.destroy();
+					if(y.lives<=0){
+						y.destroy();
+					}
+				}); 
+
+				sjs.onHit("enemy","cannon",function(x,y){
+					x.moveTo(x.getX()-25,x.getY());
+					y.lives--;
+					if(x.lives<=0){
+						var dead = new sjs.Image("Tower Defense/Images/deadGuy.png");
+						dead.type = "dead";
+						dead.moveTo(x.getX(),x.getY()+5);;
+						dead.noBounds = true;
+						dead.setSize(50,50);
+						dead.friction = 0.1;	
+						dead.pushRight(5);
+						x.destroy();
+						setTimeout(function(){
+							dead.destroy();
+						},500);
+					} 
+				}); 
+
+				sjs.onHit("enemyrange",["blocker","gunner","cannon","rifleman","castle","blasterman"],function(x,y){ 
+					if(x.fire == true){ 
+						x.enemy3.setImage("Tower Defense/Images/Crap.png")
+						x.enemy3.pushLeft(2);
+						x.pushLeft(2);
+						if(x.enemy3.lives <= 0){
+							x.destroy();
+							x.enemy3.destroy();
+						} 
+						var enemybullet = new sjs.Image("Tower Defense/Images/Enemy Bullet.png"); 
+						enemybullet.type = "enemybullet";
+						enemybullet.moveTo(x.getX(),x.getY()+40);
+						enemybullet.setSize(35,8);
+						enemybullet.friction=0;
+						enemybullet.pushRight(10);
+						enemybullet.noBounds=true;
+						x.fire = false;
+						setTimeout(function(){
+							enemybullet.destroy();
+							x.fire=true;
+							x.enemy3.setImage("Tower Defense/Images/Crap.gif")
+							x.enemy3.pushRight(2);
+							x.pushRight(2);
+							if(x.enemy3.lives <= 0){
+
+								x.destroy();
+								x.enemy3.destroy();
+							} 
+						},x.firerate);	
+					} 
+				}); 
+
+				sjs.onHit("range",["enemy","enemy2","enemy3","enemy4","boss","enemycastle"],function(x,y){ 
+					if(x.fire == true){ 
+						x.gunner.setImage("Tower Defense/Images/AstroGunner.png")
+						x.gunner.pushRight(3);
+						if(x.gunner.lives <= 0){
+							x.destroy();
+							x.gunner.destroy();
+						} 
+						var gbullet = new sjs.Image("Tower Defense/Images/bullet.png"); 
+						gbullet.type = "bullet";
+						gbullet.moveTo(x.getX()+260,x.getY()+10);
+						gbullet.setSize(40, 10);
+						gbullet.friction=0;
+						gbullet.pushLeft(10);
+						gbullet.noBounds=true;
+						x.fire = false;
+						setTimeout(function(){
+							gbullet.destroy();
+							x.fire=true;
+							x.gunner.setImage("Tower Defense/Images/AstroGunner.gif")
+							x.gunner.pushLeft(3);
+							if(x.gunner.lives <= 0){
+								x.destroy();
+								var dead = new sjs.Image("Tower Defense/Images/deadGuy.png");
+								dead.type = "dead";
+								dead.moveTo(x.gunner.getX(),x.gunner.getY()+5);;
+								dead.noBounds = true;
+								dead.setSize(50,50);
+								dead.friction = 0.1;	
+								dead.pushRight(5);
+								x.gunner.destroy();
+								setTimeout(function(){
+									dead.destroy();
+								},500);
+							} 
+						},x.firerate);	
+					} 
+				}); 
+
+					sjs.onHit("bullet","enemy",function(x,y){
+						y.lives--; 
+						x.destroy();
+						if(y.lives<=0){
+							y.destroy();
+							mana += 10;
+							mana_text.setText("Mana: "+mana);
+						}
+					}); 
+
+					sjs.onHit("bullet","enemy2",function(x,y){
+						y.lives--; 
+						x.destroy();
+						if(y.lives<=0){
+							var dead = new sjs.Image("Tower Defense/Images/skeletonDeath.gif");
+							dead.moveTo(y.getX(),y.getY());;
+							dead.noBounds = true;
+							dead.setSize(80,80);
+							y.destroy();
+							setTimeout(function(){
+								dead.destroy();
+							},500);
+							mana += 20;
+							mana_text.setText("Mana: "+mana);
+						}
+					}); 
+
+					sjs.onHit("bullet","enemy3",function(x,y){
+						y.lives--; 
+						x.destroy();
+						if(y.lives<=0){
+							y.destroy();
+							mana += 30;
+							mana_text.setText("Mana: "+mana);
+						}
+					});
+
+					sjs.onHit("bullet","enemy4",function(x,y){
+						y.lives--; 
+						x.destroy();
+						if(y.lives<=0){
+							y.destroy();
+							mana += 30;
+							mana_text.setText("Mana: "+mana);
+						}
+					});
+
+					sjs.onHit("bullet2","enemy",function(x,y){
+						y.lives--; 
+						x.lives--;
+						if(y.lives<=0){
+							y.destroy();
+							mana += 10;
+							mana_text.setText("Mana: "+mana);
+						}
+						if(x.lives<=0){
+							x.destroy();
+						}
+					}); 
+
+					sjs.onHit("bullet2","enemy2",function(x,y){
+						y.lives--; 
+						x.lives--;
+						x.moveTo(x.getX()+25,x.getY());
+						if(y.lives<=0){
+							var dead = new sjs.Image("Tower Defense/Images/skeletonDeath.gif");
+							dead.moveTo(y.getX(),y.getY());;
+							dead.noBounds = true;
+							dead.setSize(80,80);
+							y.destroy();
+							setTimeout(function(){
+								dead.destroy();
+							},500);
+							mana += 20;
+							mana_text.setText("Mana: "+mana);
+						}
+
+						if(x.lives<=0){
+							x.destroy();
+						}
+					}); 
+
+					sjs.onHit("bullet2","enemy3",function(x,y){
+						y.lives--; 
+						x.lives--;
+						x.moveTo(x.getX()+25,x.getY());
+						if(y.lives<=0){
+							y.destroy();
+							mana += 30;
+							mana_text.setText("Mana: "+mana);
+						}
+						if(x.lives<=0){
+							x.destroy();
+						}
+					});
+
+					sjs.onHit("bullet2","enemy4",function(x,y){
+						y.lives--; 
+						x.lives--;
+						x.moveTo(x.getX()+25,x.getY());
+						if(y.lives<=0){
+							y.destroy();
+							mana += 30;
+							mana_text.setText("Mana: "+mana);
+						}
+						if(x.lives<=0){
+							x.destroy();
+						}
+					});
+					sjs.onHit("bullet2","boss",function(x,y){
+						y.lives--; 
+						x.lives--;
+						x.moveTo(x.getX()+25,x.getY());
+						if(y.lives<=0){
+							y.destroy();
+						}
+						if(x.lives<=0){
+							x.destroy();
+						}
+					});
+
+					sjs.onHit("bullet2","enemycastle",function(x,y){
+						y.lives--; 
+						x.lives--;
+						x.moveTo(x.getX()+25,x.getY());
+						if(y.lives<=0){
+							y.destroy();
+						}
+						if(x.lives<=0){
+							x.destroy();
+						}
+						setTimeout(function(){
+							var enemy = new sjs.Image("Tower Defense/Images/bad.gif");
+								enemy.type = "enemy";
+								enemy.moveTo(0,575);
+								enemy.noBounds = true;
+								enemy.setSize(50,50);
+								enemy.friction = 0;	
+								enemy.lives = 1;
+								enemy.pushRight(3 + speedTimer/100);
+							if (y.lives <= 21){
+								var enemy2 = new sjs.Image("Tower Defense/Images/skeleton.gif");
+									enemy2.type = "enemy2";
+									enemy2.moveTo(0,545);
+									enemy2.noBounds = true;
+									enemy2.setSize(80,80);
+									enemy2.friction = 0;	
+									enemy2.pushRight(3);
+									enemy2.lives = Math.round(5 + speedTimer/100);
+									enemy2.attack = true;
+									enemy2.attackrate = 300; 
+								if (y.lives <= 6){
+									var enemy3 = new sjs.Image("Tower Defense/Images/Crap.gif");
+										enemy3.type = "enemy3";
+										enemy3.moveTo(0,545);
+										enemy3.noBounds = true;
+										enemy3.setSize(80,80);
+										enemy3.friction = 0;
+										enemy3.pushRight(2);
+										enemy3.lives = 3; 
+									var enemyrange = new sjs.Image("")
+										enemyrange.type = "enemyrange";
+										enemyrange.setSize(300,80);
+										enemyrange.noBounds = true;
+										enemyrange.pushRight(2);
+										enemyrange.friction = 0;
+										enemyrange.moveTo(enemy3.getX()+80,enemy3.getY());
+										enemyrange.fire=true;
+										enemyrange.firerate = 1000;
+										enemyrange.node.style.zIndex = -2;
+										enemy3.enemyrange = enemyrange; 
+										enemyrange.enemy3 = enemy3; 
+								}
+							}
+						},200);
+						if(y.lives<=0){
+							y.destroy();
+							var nextLevel = new sjs.Button("Congratulations! Click to go to Menu!", function(){
+								window.location = "Yoricks Undead Army.html";
+							});
+							nextLevel.center(); 
+						}
+					}); 
+					
+					sjs.onHit("bullet3","enemy",function(x,y){
+						y.lives--;
+						if(y.lives<=0){
+							y.destroy();
+							mana += 10;
+							mana_text.setText("Mana: "+mana);
+						}
+					}); 
+
+					var lazered = false;
+					sjs.onHit("bullet3","enemy2",function(x,y){
+						if(lazered == false){
+							y.lives--;
+							lazered = true;
+						} else if (lazered == true) {
+							setTimeout(function(){
+								lazered = false;
+							},1000);
+						}
+
+						if(y.lives<=0){
+							var dead = new sjs.Image("Tower Defense/Images/skeletonDeath.gif");
+							dead.moveTo(y.getX(),y.getY());;
+							dead.noBounds = true;
+							dead.setSize(80,80);
+							y.destroy();
+							setTimeout(function(){
+								dead.destroy();
+							},500);
+							mana += 20;
+							mana_text.setText("Mana: "+mana);
+						}
+					});
+
+					var lazered = false;
+					sjs.onHit("bullet3","enemy3",function(x,y){
+						if(lazered == false){
+							y.lives--;
+							lazered = true;
+						} else if (lazered == true) {
+							setTimeout(function(){
+								lazered = false;
+							},1000);
+						}
+						if(y.lives<=0){
+							y.destroy();
+							mana += 30;
+							mana_text.setText("Mana: "+mana);
+						}
+					});
+
+					var lazered = false;
+					sjs.onHit("bullet3","enemy4",function(x,y){
+						if(lazered == false){
+							y.lives--;
+							lazered = true;
+						} else if (lazered == true) {
+							setTimeout(function(){
+								lazered = false;
+							},1000);
+						}
+						if(y.lives<=0){
+							y.destroy();
+							mana += 30;
+							mana_text.setText("Mana: "+mana);
+						}
+					});
+
+					sjs.onHit("bullet3","enemycastle",function(x,y){
+							y.lives--;
+							x.destroy();
+							setTimeout(function(){
+								var enemy = new sjs.Image("Tower Defense/Images/bad.gif");
+									enemy.type = "enemy";
+									enemy.moveTo(0,575);
+									enemy.noBounds = true;
+									enemy.setSize(50,50);
+									enemy.friction = 0;	
+									enemy.lives = 1;
+									enemy.pushRight(3 + speedTimer/100);
+								if (y.lives <= 21){
+									var enemy2 = new sjs.Image("Tower Defense/Images/skeleton.gif");
+										enemy2.type = "enemy2";
+										enemy2.moveTo(0,545);
+										enemy2.noBounds = true;
+										enemy2.setSize(80,80);
+										enemy2.friction = 0;	
+										enemy2.pushRight(3);
+										enemy2.lives = Math.round(5 + speedTimer/100);
+										enemy2.attack = true;
+										enemy2.attackrate = 300; 
+									if (y.lives <= 6){
+										var enemy3 = new sjs.Image("Tower Defense/Images/Crap.gif");
+											enemy3.type = "enemy3";
+											enemy3.moveTo(0,545);
+											enemy3.noBounds = true;
+											enemy3.setSize(80,80);
+											enemy3.friction = 0;
+											enemy3.pushRight(2);
+											enemy3.lives = 3; 
+										var enemyrange = new sjs.Image("")
+											enemyrange.type = "enemyrange";
+											enemyrange.setSize(300,80);
+											enemyrange.noBounds = true;
+											enemyrange.pushRight(2);
+											enemyrange.friction = 0;
+											enemyrange.moveTo(enemy3.getX()+80,enemy3.getY());
+											enemyrange.fire=true;
+											enemyrange.firerate = 1000;
+											enemyrange.node.style.zIndex = -2;
+											enemy3.enemyrange = enemyrange; 
+											enemyrange.enemy3 = enemy3; 
+									}
+								}
+							},200);
+						if(y.lives<=0){
+							y.destroy();
+							var nextLevel = new sjs.Button("Congratulations! Click to go to Menu!", function(){
+								window.location = "Yoricks Undead Army.html";
+							});
+							nextLevel.center(); 
+						}
+					});
+
+					sjs.onHit("rocket","enemy",function(x,y){
+						y.lives-=1; 
+						var explosion = new sjs.Image("Tower Defense/Images/explode.gif");
+						explosion.moveTo(x.getX()-50,x.getY()-50);
+						x.destroy();
+						setTimeout(function(){
+							explosion.destroy();
+						}, 500);
+						if(y.lives<=0){
+							y.destroy();
+							mana += 10;
+							mana_text.setText("Mana: "+mana);
+						}
+					}); 
+
+					sjs.onHit("rocket","enemy2",function(x,y){
+						y.lives-=2; 
+						var explosion = new sjs.Image("Tower Defense/Images/explode.gif");
+						explosion.moveTo(x.getX()-50,x.getY()-50);
+						x.destroy();
+						setTimeout(function(){
+							explosion.destroy();
+						}, 500);
+						if(y.lives<=0){
+							var dead = new sjs.Image("Tower Defense/Images/skeletonDeath.gif");
+							dead.moveTo(y.getX(),y.getY());;
+							dead.noBounds = true;
+							dead.setSize(80,80);
+							y.destroy();
+							setTimeout(function(){
+								dead.destroy();
+							},500);
+							mana += 20;
+							mana_text.setText("Mana: "+mana);
+						}
+					}); 
+
+					sjs.onHit("rocket","enemy3",function(x,y){
+						y.lives-=2; 
+						var explosion = new sjs.Image("Tower Defense/Images/explode.gif");
+						explosion.moveTo(x.getX()-50,x.getY()-50);
+						x.destroy();
+						setTimeout(function(){
+							explosion.destroy();
+						}, 500);
+						if(y.lives<=0){
+							y.destroy();
+							mana += 30;
+							mana_text.setText("Mana: "+mana);
+						}
+					});
+
+					sjs.onHit("rocket","enemy4",function(x,y){
+						y.lives-=2; 
+						var explosion = new sjs.Image("Tower Defense/Images/explode.gif");
+						explosion.moveTo(y.getX()-50,y.getY());
+						explosion.type = "explosion";
+						x.destroy();
+						setTimeout(function(){
+							explosion.destroy();
+						}, 500);
+						if(y.lives<=0){
+							y.destroy();
+							mana += 30;
+							mana_text.setText("Mana: "+mana);
+						}
+					});
+
+					sjs.onHit(["rocket","bullet"],"boss",function(x,y){
+						y.lives-=2; 
+						x.destroy();
+						if(y.lives<=0){
+							y.destroy();
+
+						}
+					});
+
+					sjs.onHit("explosion","enemy",function(x,y){
+						y.lives-=1; 
+						y.moveTo(y.getX()-50,y.getY());
+						if(y.lives<=0){
+							y.destroy();
+							mana += 10;
+							mana_text.setText("Mana: "+mana);
+						}	
+					});
+
+					sjs.onHit("explosion","enemy2",function(x,y){
+						y.moveTo(y.getX()-50,y.getY());
+						if(y.lives<=0){
+							var dead = new sjs.Image("Tower Defense/Images/skeletonDeath.gif");
+							dead.moveTo(y.getX(),y.getY());;
+							dead.noBounds = true;
+							dead.setSize(80,80);
+							y.destroy();
+							setTimeout(function(){
+								dead.destroy();
+								mana += 20;
+								mana_text.setText("Mana: "+mana);
+							}, 500);
+						}
+						
+					});
+
+					sjs.onHit("explosion","enemy3",function(x,y){
+						y.moveTo(y.getX()-50,y.getY());
+						y.enemyrange.moveTo(y.getX()-50,y.getY());
+						if(y.lives<=0){
+							y.destroy();
+							mana += 30;
+							mana_text.setText("Mana: "+mana);
+						}					
+					});
+
+					sjs.onHit("explosion","enemy4",function(x,y){
+						y.moveTo(y.getX()-50,y.getY());
+						if(y.lives<=0){
+							y.destroy();
+							mana += 30;
+							mana_text.setText("Mana: "+mana);
+						}		
+					});
+
+					sjs.onHit(["bullet","rocket"],"enemycastle",function(x,y){
+						y.lives--; 
+						x.destroy();
+						setTimeout(function(){
+							var enemy = new sjs.Image("Tower Defense/Images/bad.gif");
+								enemy.type = "enemy";
+								enemy.moveTo(0,575);
+								enemy.noBounds = true;
+								enemy.setSize(50,50);
+								enemy.friction = 0;	
+								enemy.lives = 1;
+								enemy.pushRight(3 + speedTimer/100);
+							if (y.lives <= 21){
+								var enemy2 = new sjs.Image("Tower Defense/Images/skeleton.gif");
+									enemy2.type = "enemy2";
+									enemy2.moveTo(0,545);
+									enemy2.noBounds = true;
+									enemy2.setSize(80,80);
+									enemy2.friction = 0;	
+									enemy2.pushRight(3);
+									enemy2.lives = Math.round(5 + speedTimer/100);
+									enemy2.attack = true;
+									enemy2.attackrate = 300; 
+								if (y.lives <= 6){
+									var enemy3 = new sjs.Image("Tower Defense/Images/Crap.gif");
+										enemy3.type = "enemy3";
+										enemy3.moveTo(0,545);
+										enemy3.noBounds = true;
+										enemy3.setSize(80,80);
+										enemy3.friction = 0;
+										enemy3.pushRight(2);
+										enemy3.lives = 3; 
+									var enemyrange = new sjs.Image("")
+										enemyrange.type = "enemyrange";
+										enemyrange.setSize(300,80);
+										enemyrange.noBounds = true;
+										enemyrange.pushRight(2);
+										enemyrange.friction = 0;
+										enemyrange.moveTo(enemy3.getX()+80,enemy3.getY());
+										enemyrange.fire=true;
+										enemyrange.firerate = 1000;
+										enemyrange.node.style.zIndex = -2;
+										enemy3.enemyrange = enemyrange; 
+										enemyrange.enemy3 = enemy3; 
+								}
+							}
+						},200);
+						if(y.lives<=0){
+							y.destroy();
+							var nextLevel = new sjs.Button("Congratulations! Click to go to Menu!", function(){
+								window.location = "Yoricks Undead Army.html";
+							});
+							nextLevel.center(); 
+						}
+					}); 
+
+					sjs.onHit("range2",["enemy","enemy2","enemy3","enemy4","boss","enemycastle"],function(x,y){ 
+							if(x.fire == true){ 
+								x.cannon.setImage("Tower Defense/Images/Cannon.png")
+								x.cannon.pushRight(2);
+								if(x.cannon.lives <= 0){
+									x.destroy();
+									x.cannon.destroy();
+								} 
+								var rocket = new sjs.Image("Tower Defense/Images/Rocket.png"); 
+								rocket.type = "rocket";
+								rocket.moveTo(x.getX()+402,x.getY()+10);
+								rocket.setSize(16, 16);
+								rocket.friction=0;
+								rocket.pushLeft(10);
+								rocket.noBounds=true;
+								x.fire = false;
+								setTimeout(function(){
+									rocket.destroy();
+									x.fire=true;
+									x.cannon.setImage("Tower Defense/Images/Cannon.gif")
+									x.cannon.pushLeft(2);
+									if(x.cannon.lives <= 0){
+										x.destroy();
+										var dead = new sjs.Image("Tower Defense/Images/deadGuy.png");
+										dead.type = "dead";
+										dead.moveTo(x.cannon.getX(),x.cannon.getY()+5);;
+										dead.noBounds = true;
+										dead.setSize(50,50);
+										dead.friction = 0.1;	
+										dead.pushRight(5);
+										x.cannon.destroy();
+										setTimeout(function(){
+											dead.destroy();
+										},500);
+									}  
+								},x.firerate);	
+							} 
+						}); 
+
+					sjs.onHit("range3",["enemy","enemy2","enemy3","enemy4","boss","enemycastle"],function(x,y){ 
+						if(x.fire == true){ 
+							x.rifleman.setImage("Tower Defense/Images/Rifle Man.png")
+							x.rifleman.pushRight(3);
+							if(x.rifleman.lives <= 0){
+								x.destroy();
+								x.rifleman.destroy();
+							} 
+							var gbullet = new sjs.Image("Tower Defense/Images/bullet.png"); 
+							gbullet.type = "bullet2";
+							gbullet.moveTo(x.getX()+300,x.getY()+15);
+							gbullet.setSize(32,16);
+							gbullet.friction=0;
+							gbullet.pushLeft(15);
+							gbullet.noBounds=true;
+							gbullet.lives = 3;
+							x.fire = false;
+							setTimeout(function(){
+								gbullet.destroy();
+								x.fire=true;
+								x.rifleman.setImage("Tower Defense/Images/Rifle Man.gif")
+								x.rifleman.pushLeft(3);
+								if(x.rifleman.lives <= 0){
+									x.destroy();
+									var dead = new sjs.Image("Tower Defense/Images/Army Man Dead.png");
+									dead.type = "dead";
+									dead.moveTo(x.rifleman.getX(),x.rifleman.getY()+10);
+									dead.setSize(60,60);
+									dead.friction = 0.1;	
+									dead.pushRight(5);
+									x.rifleman.destroy();
+									setTimeout(function(){
+										dead.destroy();
+									},500);
+								}  
+							},x.firerate);	
+						}
+					}); 
+					
+					sjs.onHit("range4",["enemy","enemy2","enemy3","enemy4","boss","enemycastle"],function(x,y){ 
+						if(x.fire == true){ 
+							x.blasterman.setImage("Tower Defense/Images/Blaster Man.png")
+							x.blasterman.pushRight(3);
+							if(x.blasterman.lives <= 0){
+								x.destroy();
+								x.blasterman.destroy();
+							} 
+							var gbullet = new sjs.Image("Tower Defense/Images/lazer.png"); 
+							gbullet.type = "bullet3";
+							gbullet.moveTo(x.getX()+300,x.getY()+15);
+							gbullet.setSize(32,16);
+							gbullet.friction=0;
+							gbullet.pushLeft(15);
+							gbullet.noBounds=true;
+							x.fire = false;
+							setTimeout(function(){
+								gbullet.destroy();
+								x.fire=true;
+								x.blasterman.setImage("Tower Defense/Images/Blaster Man.gif")
+								x.blasterman.pushLeft(3);
+								if(x.blasterman.lives <= 0){
+									x.destroy();
+									var dead = new sjs.Image("Tower Defense/Images/deadGuy.png");
+									dead.type = "dead";
+									dead.moveTo(x.blasterman.getX(),x.blasterman.getY()+10);
+									dead.setSize(50,50);
+									dead.friction = 0.1;	
+									dead.pushRight(5);
+									x.blasterman.destroy();
+									setTimeout(function(){
+										dead.destroy();
+									},500);
+								}  
+							},x.firerate);	
+						}
+					});
+
+			sjs.onHit("enemy","castle",function(x,y){
+				x.moveTo(x.getX()-25,x.getY());
+				y.lives--;
+				if (y.lives <= 0) {
+					y.destroy();
+					y.castleGuard.destroy();
+				}
+			});
+
+			sjs.onHit("enemybullet","castle",function(x,y){
+				y.lives--;
+				x.destroy();
+				if (y.lives <= 0) {
+					y.destroy();
+					y.castleGuard.destroy();
+				}
+			});
+
+			sjs.onHit("right_screen",["enemy","enemy2","enemy3","enemy4"],function(x,y){
+				window.location="Gameover.html";
+			});
+			sjs.onHit("castleGuard","enemy4",function(x,y){
+				y.destroy();
+				setTimeout(function(){
+					y.destroy();
+				},400);
+			});
+			sjs.onHit("enemyCastleGuard",["blocker","gunner","cannon","rifleman","blasterman"],function(x,y){
+				y.destroy();
+				setTimeout(function(){
+					y.destroy();
+				},400);
+			});//939 lines
+			} //End Start
+
+				var credits = 100;
+				var credits_text = "";
+
+				function blocker(){
+					if (credits >= 30){
+						credits -= 30;
+						credits_text.setText("Credits: "+credits);
+						var blocker = new sjs.Image("Tower Defense/Images/AstroBlocker.gif");
+						blocker.type = "blocker";
+						blocker.setSize(50,50);
+						blocker.moveTo(2200,575);
+						blocker.lives = 4;
+						blocker.pushLeft(4);
+						blocker.friction = 0;
+						blocker.attackrate = 500;
+						blocker.noBounds = true;
+						blocker.attack=true;
+					} else {
+						var no_credits = new sjs.Text("Your Credits Lag! Collect More Credits!",20,"red");
+						no_credits.center().offset(-sjs.gx,-200);
+						setTimeout(function(){
+							no_credits.destroy(); 
+						},400);
+					}
+				} //End function blocker
+			
+			function gunner(){
+				if(credits >= 50){
+					credits -= 50;
+					credits_text.setText("Credits: "+credits);
+					var gunner = new sjs.Image("Tower Defense/Images/AstroGunner.gif");
+						gunner.type = "gunner";
+						gunner.setSize(50,50);
+						gunner.moveTo(2200,575);
+						gunner.lives = 1;
+						gunner.pushLeft(3);
+						gunner.friction = 0;
+						gunner.noBounds = true;
+					var range = new sjs.Image("")
+						range.type = "range";
+						range.setSize(300,50);
+						range.moveTo(gunner.getX()-300,gunner.getY());
+						range.follow(gunner);
+						range.fire=true;
+						range.firerate = 1000;
+						range.node.style.zIndex = -2;
+						gunner.range = range; 
+						range.gunner = gunner; 
+			 
+				} else {
+					var no_credits = new sjs.Text("Your Credits Lag! Collect More Credits!",20,"red");
+					no_credits.center().offset(-sjs.gx,-200);
+					setTimeout(function(){
+						no_credits.destroy(); 
+					},1000);
+				} 
+			} //End function gunner
+
+			function cannon(){
+				if(credits >= 80){
+				credits -=80;
+				credits_text.setText("Credits: "+credits);	
+				var cannon = new sjs.Image("Tower Defense/Images/Cannon.gif"); 
+					cannon.type = "cannon";
+					cannon.setSize(50,50);
+					cannon.moveTo(2200,575);
+					cannon.lives = 2;	
+					cannon.pushLeft(2);
+					cannon.friction = 0;
+					cannon.noBounds = true;
+				var range2 = new sjs.Image("");
+					range2.type = "range2";
+					range2.setSize(450,50);
+					range2.moveTo(cannon.getX()-450,cannon.getY()); 
+					range2.follow(cannon); 
+					range2.noBounds = true;
+					range2.fire=true;
+					range2.firerate = 1500;
+					range2.node.style.zIndex = -2;
+					cannon.range2 = range2; 
+					range2.cannon = cannon; 
+				} else {
+					var no_credits = new sjs.Text("Your Credits Lag! Collect More Credits!",20,"red");
+					no_credits.center().offset(-sjs.gx,-200);
+					setTimeout(function(){
+						no_credits.destroy(); 
+					},1000);
+				}
+			}//End function cannon
+
+			function rifleman(){
+				if(credits >= 100){
+				credits -=100;
+				credits_text.setText("Credits: "+credits);	
+				var rifleman = new sjs.Image("Tower Defense/Images/Rifle Man.gif"); 
+					rifleman.type = "rifleman";
+					rifleman.setSize(60,60);
+					rifleman.moveTo(2200,565);
+					rifleman.lives = 1;	
+					rifleman.pushLeft(3);
+					rifleman.friction = 0;
+					rifleman.noBounds = true;
+				var range3 = new sjs.Image("");
+					range3.type = "range3";
+					range3.setSize(350,60);
+					range3.moveTo(rifleman.getX()-360,rifleman.getY()); 
+					range3.follow(rifleman); 
+					range3.noBounds = true;
+					range3.fire=true;
+					range3.firerate = 1000;
+					range3.node.style.zIndex = -2;
+					rifleman.range3 = range3; 
+					range3.rifleman = rifleman; 
+				} else {
+					var no_credits = new sjs.Text("Your Credits Lag! Collect More Credits!",20,"red");
+					no_credits.center().offset(-sjs.gx,-200);
+					setTimeout(function(){
+						no_credits.destroy(); 
+					},1000);
+				}
+			}//End function rifleman
+
+			function blasterman(){
+				if(credits >= 100){
+				credits -=100;
+				credits_text.setText("Credits: "+credits);	
+				var blasterman = new sjs.Image("Tower Defense/Images/Blaster Man.gif"); 
+					blasterman.type = "blasterman";
+					blasterman.setSize(50,50);
+					blasterman.moveTo(2200,575);
+					blasterman.lives = 1;	
+					blasterman.pushLeft(3);
+					blasterman.friction = 0;
+					blasterman.noBounds = true;
+				var range4 = new sjs.Image("");
+					range4.type = "range4";
+					range4.setSize(300,50);
+					range4.moveTo(blasterman.getX()-300,blasterman.getY()); 
+					range4.follow(blasterman); 
+					range4.noBounds = true;
+					range4.fire=true;
+					range4.firerate = 1000;
+					range4.node.style.zIndex = -2;
+					blasterman.range4 = range4; 
+					range4.blasterman = blasterman; 
+				} else {
+					var no_credits = new sjs.Text("Your Credits Lag! Collect More Credits!",20,"red");
+					no_credits.center().offset(-sjs.gx,-200);
+					setTimeout(function(){
+						no_credits.destroy(); 
+					},1000);
+				}
+			}
+
+			var mana = 0;
+			var mana_text = "";
+			var goldregen = 5;
+			var manaCost = 100;
+			function goldRegen(){
+				if(mana >= manaCost){
+					mana -= manaCost;
+					mana_text.setText("Mana: "+mana);
+					goldregen += 5;
+					if (manaCost <= 9900) {
+						manaCost += 100;
+					};
+				} else {
+					var no_mana = new sjs.Text("Your Mana Lag! Collect More Mana!",20,"red");
+					no_mana.center().offset(-sjs.gx,-200);
+					setTimeout(function(){
+						no_mana.destroy(); 
+					},400);
+				}
+			}
+
+		</script>
+		<style> 
+		.images{
+		height:50px;
+		margin:10px;
+	}
+		</style>
+	</head>
+	<body onload="start()">
+		<center>
+		</center>
+		<div id="target" style="overflow:hidden; background-color:black; margin:auto;"></div> 
+</body> 
+</html> 

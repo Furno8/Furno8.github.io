@@ -1,0 +1,29 @@
+
+<html>
+	<head>
+		<title>Gameover</title>
+			<script src="https://simplycoding.org/files/simplyjs/simply.js"></script>
+			<script>
+			function start(){
+			sjs.open("target" ,800,500);
+			var background = new sjs.Image("Tower Defense/Images/Background.png");
+			background.setSize(800,500);
+			var gameover = new Audio('Tower Defense/Game Over.mp3')
+			gameover.play();
+			var gameover_text = new sjs.Image("Tower Defense/Images/Game Over.png"); 
+			gameover_text.moveTo(275,100);
+			gameover_text.setSize(250,50);
+
+			var menuBtn = new sjs.Image("Tower Defense/Images/Main Menu.png");
+			menuBtn.setSize(125,20);
+			menuBtn.onMouseDown(function(){
+				window.location = "Yoricks Undead Army.html";
+			});
+			menuBtn.center();
+			}
+			</script>
+	</head>
+	<body onload="start()">
+		<div id="target" style="overflow:hidden; background-color:gray; margin:auto;"></div>
+	</body>
+</html>
