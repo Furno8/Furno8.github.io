@@ -276,7 +276,7 @@
 					var gbullet = new sjs.Image("Tower Defense/Images/bullet old.png");
 						gbullet.type="bullet";
 						gbullet.moveTo(x.getX()+585,x.getY()-5);
-						gbullet.setSize(40, 10);
+						gbullet.setSize(40,10);
 						gbullet.friction=0;
 						gbullet.noBounds=true;
 
@@ -284,8 +284,8 @@
 						var dy = y.getY() - x.getY();
 						var angle = Math.atan2(dy, dx); 
 
-						gbullet.pushRight(17*Math.cos(angle)); 
-						gbullet.pushDown(17*Math.sin(angle)); 
+						gbullet.pushRight(25*Math.cos(angle)); 
+						gbullet.pushDown(25*Math.sin(angle)); 
 
 						x.fire = false;
 						setTimeout(function(){
